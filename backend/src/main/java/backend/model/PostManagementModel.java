@@ -16,8 +16,8 @@ public class PostManagementModel {
     private String title;
     private String description;
     private List<String> media;
-    private Map<String, Boolean> likes = new HashMap<>(); // Map to store user likes
-    private List<Comment> comments = new ArrayList<>(); // List to store comments
+    private Map<String, Boolean> likes = new HashMap<>(); 
+    private List<Comment> comments = new ArrayList<>(); 
 
     public PostManagementModel(String id, String userID, String title, String description, List<String> media) {
         this.id = id;

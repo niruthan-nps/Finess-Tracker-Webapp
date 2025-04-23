@@ -116,10 +116,8 @@ public class PostManagementController {
         PostManagementModel post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostManagementNotFoundException("Post not found: " + postId));
 
-        // Delete associated media files
         for (String mediaUrl : post.getMedia()) {
             try {
-                // Resolve the full file path
                 Path filePath = Paths.get(uploadDir, mediaUrl.replace("/media/", ""));
                 Files.deleteIfExists(filePath);
             } catch (IOException e) {
@@ -127,8 +125,6 @@ public class PostManagementController {
                         .body("Failed to delete media file: " + mediaUrl);
             }
         }
-
-        // Delete the post from the database
         postRepository.deleteById(postId);
         return ResponseEntity.ok("Post deleted successfully!");
     }
@@ -233,7 +229,6 @@ public class PostManagementController {
                     comment.setUserID(userID);
                     comment.setContent(content);
 
-                    // Fetch user's full name
                     String userFullName = userRepository.findById(userID)
                             .map(user -> user.getFullname())
                             .orElse("Anonymous");
@@ -242,7 +237,6 @@ public class PostManagementController {
                     post.getComments().add(comment);
                     postRepository.save(post);
 
-                    // Create a notification for the post owner
                     if (!userID.equals(post.getUserID())) {
                         String message = String.format("%s commented on your post: %s", userFullName, post.getTitle());
                         String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

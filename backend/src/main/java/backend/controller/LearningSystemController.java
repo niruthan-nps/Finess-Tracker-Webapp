@@ -36,8 +36,12 @@ public class LearningSystemController {
     LearningSystemModel update(@RequestBody LearningSystemModel newLearningSystemModel, @PathVariable String id) {
         return learningSystemRepository.findById(id)
                 .map(learningSystemModel -> {
-                    (newLearningSystemModel.getEndDate());
-                    LearningSystemModel.setLevel(newLearningSystemModel.getLevel());
+                    learningSystemModel.setTitle(newLearningSystemModel.getTitle());
+                    learningSystemModel.setPlan(newLearningSystemModel.getPlan());
+                    learningSystemModel.setMethod(newLearningSystemModel.getMethod());
+                    learningSystemModel.setOutCome(newLearningSystemModel.getOutCome());
+                    learningSystemModel.setPostOwnerID(newLearningSystemModel.getPostOwnerID());
+                    learningSystemModel.setPostOwnerName(newLearningSystemModel.getPostOwnerName());
                     return learningSystemRepository.save(learningSystemModel);
                 }).orElseThrow(() -> new LearningSystemNotFoundException(id));
     }

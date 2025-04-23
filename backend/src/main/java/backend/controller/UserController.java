@@ -42,13 +42,13 @@ public class UserController {
     //User Login
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UserModel loginDetails) {
-        System.out.println("Login attempt for email: " + loginDetails.getEmail()); // Log email for debugging
+        System.out.println("Login attempt for email: " + loginDetails.getEmail()); 
 
         UserModel user = userRepository.findByEmail(loginDetails.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("Email not found: " + loginDetails.getEmail()));
 
         if (user.getPassword().equals(loginDetails.getPassword())) {
-            System.out.println("Login successful for email: " + loginDetails.getEmail()); // Log success
+            System.out.println("Login successful for email: " + loginDetails.getEmail()); 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login Successful");
             response.put("id", user.getId());
@@ -81,7 +81,6 @@ public class UserController {
                     userModel.setEmail(newUserModel.getEmail());
                     userModel.setPassword(newUserModel.getPassword());
                     userModel.setPhone(newUserModel.getPhone());
-                    userModel.setSkills(newUserModel.getSkills());
                     return userRepository.save(userModel);
                 }).orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -135,7 +134,7 @@ public class UserController {
     @GetMapping("/user/{userID}/followedUsers")
     public List<String> getFollowedUsers(@PathVariable String userID) {
         return userRepository.findById(userID)
-                .map(user -> new ArrayList<>(user.getFollowedUsers())) // Convert Set to List
+                .map(user -> new ArrayList<>(user.getFollowedUsers())) 
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userID));
     }
 }

@@ -15,25 +15,23 @@ public class LearningSystemModel {
     @GeneratedValue
     private String id;
     private String title;
-    private String description;
-    private String contentURL;
-    private List<String> tags;
+    private String plan;
+    private String method;
+    private String outCome;
     private String postOwnerID;
     private String postOwnerName;
-    private String createdAt;
-    private Map<String, Boolean> likes = new HashMap<>(); 
-    private List<Comment> comments = new ArrayList<>(); 
 
     public LearningSystemModel() {
     }
 
-    public LearningSystemModel(String id, String title, String description, String contentURL, List<String> tags, String postOwnerID) {
+    public LearningSystemModel(String id, String title, String plan, String method, String outCome, String postOwnerID, String postOwnerName) {
         this.id = id;
         this.title = title;
-        this.description = description;
-        this.contentURL = contentURL;
-        this.tags = tags;
+        this.plan = plan;
+        this.method = method;
+        this.outCome = outCome;
         this.postOwnerID = postOwnerID;
+        this.postOwnerName = postOwnerName;
     }
 
     public String getId() {
@@ -52,28 +50,28 @@ public class LearningSystemModel {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPlan() {
+        return plan;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPlan(String plan) {
+        this.plan = plan;
     }
 
-    public String getContentURL() {
-        return contentURL;
+    public String getMethod() {
+        return method;
     }
 
-    public void setContentURL(String contentURL) {
-        this.contentURL = contentURL;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public String getOutCome() {
+        return outCome;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setOutCome(String outCome) {
+        this.outCome = outCome;
     }
 
     public String getPostOwnerID() {
@@ -90,29 +88,5 @@ public class LearningSystemModel {
 
     public void setPostOwnerName(String postOwnerName) {
         this.postOwnerName = postOwnerName;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Map<String, Boolean> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Map<String, Boolean> likes) {
-        this.likes = likes;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }

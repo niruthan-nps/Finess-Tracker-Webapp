@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().and() // Enable CORS
+                .cors().and() 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/login/**",
@@ -41,9 +41,9 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // Allow requests from the frontend
-        config.addAllowedMethod("*"); // Allow all HTTP methods
-        config.addAllowedHeader("*"); // Allow all headers
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedMethod("*"); 
+        config.addAllowedHeader("*"); 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

@@ -25,7 +25,6 @@ public class OAuthController {
         String name = (String) attributes.get("name");
 
         UserModel user;
-        // Check if user already exists
         if (!userRepository.existsByEmail(email)) {
             user = new UserModel();
             user.setEmail(email);

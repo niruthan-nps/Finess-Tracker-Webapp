@@ -17,20 +17,18 @@ public class UserModel {
     private String email;
     private String password;
     private String phone;
-    private List<String> skills;
     private Set<String> followedUsers = new HashSet<>();
 
     public UserModel() {
 
     }
 
-    public UserModel(String id, String fullname, String email, String password, String phone, List<String> skills) {
+    public UserModel(String id, String fullname, String email, String password, String phone) {
         this.id = id;
         this.fullname = fullname;
         this.email = email;
         this.password = password;
         this.phone = phone;
-        this.skills = skills;
     }
 
     public String getId() {
@@ -71,14 +69,6 @@ public class UserModel {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public List<String> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(List<String> skills) {
-        this.skills = skills;
     }
 
     public Set<String> getFollowedUsers() {

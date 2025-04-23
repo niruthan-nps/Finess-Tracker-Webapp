@@ -11,27 +11,25 @@ public class LearningProgressModel {
     private String id;
     private String postOwnerID;
     private String postOwnerName;
-    private String skillTitle;
-    private String description;
-    private String field;
+    private String title;
     private String startDate;
     private String endDate;
-    private String level;
+    private String description;
+    private String feedBack;
 
     public LearningProgressModel() {
 
     }
 
-    public LearningProgressModel(String id, String postOwnerID, String postOwnerName, String skillTitle, String description, String field, String startDate, String endDate, String level) {
+    public LearningProgressModel(String id, String postOwnerID, String postOwnerName, String title, String startDate, String endDate, String description, String feedBack) {
         this.id = id;
         this.postOwnerID = postOwnerID;
         this.postOwnerName = postOwnerName;
-        this.skillTitle = skillTitle;
-        this.description = description;
-        this.field = field;
+        this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.level = level;
+        this.description = description;
+        this.feedBack = feedBack;
     }
 
     public String getId() {
@@ -58,28 +56,12 @@ public class LearningProgressModel {
         this.postOwnerName = postOwnerName;
     }
 
-    public String getSkillTitle() {
-        return skillTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSkillTitle(String skillTitle) {
-        this.skillTitle = skillTitle;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public void setField(String field) {
-        this.field = field;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getStartDate() {
@@ -98,11 +80,19 @@ public class LearningProgressModel {
         this.endDate = endDate;
     }
 
-    public String getLevel() {
-        return level;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFeedBack() {
+        return feedBack;
+    }
+
+    public void setFeedBack(String feedBack) {
+        this.feedBack = feedBack;
     }
 }
