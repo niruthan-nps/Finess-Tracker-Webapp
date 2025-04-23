@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaClipboard, FaCalendarAlt, FaChartLine } from 'react-icons/fa';
 import { FaUser, FaEnvelope, FaPhone, FaEdit, FaTrash } from 'react-icons/fa';
 import './profile.css';
+import NavBar from '../../Components/NavBar/NavBar';
 
 function UserProfile() {
   const [userData, setUserData] = useState(null);
@@ -66,48 +68,91 @@ function UserProfile() {
   }
 
   return (
-    <div className="user-profile-container">
-      <div className="user-profile-header">
-        <h2>Your Profile</h2>
-        <p>Manage your Plusecore account information</p>
-      </div>
-      
-      <div className="profile-info">
-        <div className="profile-info-item">
-          <span className="profile-info-label"><FaUser /> Full Name</span>
-          <span className="profile-info-value">{userData.fullname}</span>
+    <div>
+      <NavBar />
+      <div className="user-profile-container">
+        <div className="user-profile-header">
+          <h2>Your Profile</h2>
+          <p>Manage your Plusecore account information</p>
         </div>
-        
-        <div className="profile-info-item">
-          <span className="profile-info-label"><FaEnvelope /> Email</span>
-          <span className="profile-info-value">{userData.email}</span>
-        </div>
-        
-        {userType !== 'google' && (
+
+        <div className="profile-info">
           <div className="profile-info-item">
-            <span className="profile-info-label"><FaPhone /> Phone</span>
-            <span className="profile-info-value">
-              {userData.phone || 'Not provided'}
-            </span>
+            <span className="profile-info-label"><FaUser /> Full Name</span>
+            <span className="profile-info-value">{userData.fullname}</span>
           </div>
-        )}
-      </div>
-      
-      <div className="profile-actions">
-        {userType !== 'google' && (
-          <button 
-            className="profile-btn update"
-            onClick={() => navigate(`/updateUserProfile/${userId}`)}
+
+          <div className="profile-info-item">
+            <span className="profile-info-label"><FaEnvelope /> Email</span>
+            <span className="profile-info-value">{userData.email}</span>
+          </div>
+
+          {userType !== 'google' && (
+            <div className="profile-info-item">
+              <span className="profile-info-label"><FaPhone /> Phone</span>
+              <span className="profile-info-value">
+                {userData.phone || 'Not provided'}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="profile-actions">
+          {userType !== 'google' && (
+            <button
+              className="profile-btn update"
+              onClick={() => navigate(`/updateUserProfile/${userId}`)}
+            >
+              <FaEdit /> Update Profile
+            </button>
+          )}
+          <button
+            className="profile-btn delete"
+            onClick={handleDeleteProfile}
           >
-            <FaEdit /> Update Profile
+            <FaTrash /> Delete Profile
           </button>
-        )}
-        <button 
-          className="profile-btn delete"
-          onClick={handleDeleteProfile}
+        </div>
+      </div>
+      <div className="profile-cards-container">
+        <div
+          className="profile-card"
+          onClick={() => navigate('/myPosts')}
         >
-          <FaTrash /> Delete Profile
-        </button>
+          <div className="profile-card-header">
+            <FaClipboard className="profile-card-icon" />
+            <h3 className="profile-card-title">My Posts</h3>
+          </div>
+          <p className="profile-card-content">
+            View and manage all the posts you've created on Plusecore.
+          </p>
+        </div>
+
+        <div
+          className="profile-card"
+          onClick={() => navigate('/myLearningPlan')}
+        >
+          <div className="profile-card-header">
+            <FaCalendarAlt className="profile-card-icon" />
+            <h3 className="profile-card-title">My Learning Plan</h3>
+          </div>
+          <p className="profile-card-content">
+            Track your scheduled learning activities and courses.
+          </p>
+        </div>
+
+        <div
+          className="profile-card"
+          onClick={() => navigate('/MylearningProgress')}
+        >
+          <div className="profile-card-header">
+            <FaChartLine className="profile-card-icon" />
+            <h3 className="profile-card-title">My Learning Progress</h3>
+          </div>
+          <p className="profile-card-content">
+            Monitor your skill development and course completions.
+          </p>
+        </div>
       </div>
     </div>
   );

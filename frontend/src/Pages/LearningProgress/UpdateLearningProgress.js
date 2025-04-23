@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import NavBar from '../../Components/NavBar/NavBar';
 
 function UpdateLearningProgress() {
   const { id } = useParams();
@@ -36,7 +37,7 @@ function UpdateLearningProgress() {
       });
       if (response.ok) {
         alert('Learning Progress updated successfully!');
-        window.location.href = '/allLearningProgress';
+        window.location.href = '/MylearningProgress';
       } else {
         alert('Failed to update Learning Progress.');
       }
@@ -47,118 +48,86 @@ function UpdateLearningProgress() {
 
   return (
     <div>
-     <div className='continer'>
-        <div className='continSection'>
-          <div className="from_continer">
-            <p className="Auth_heading">Update Learning Progress</p>
-            <form
-              onSubmit={(e) => {
-                handleSubmit(e);
-                setFormData({
-                  skillTitle: '',
-                  description: '',
-                  field: '',
-                  startDate: '',
-                  endDate: '',
-                  level: '',
-                  postOwnerID: formData.postOwnerID,
-                  postOwnerName: formData.postOwnerName,
-                });
-              }}
-              className='from_data'
-            >
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Title</label>
-                <input
-                  className="Auth_input"
-                  name="skillTitle"
-                  placeholder="Skill Title"
-                  value={formData.skillTitle}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Description</label>
-                <textarea
-                  className="Auth_input"
-                  name="description"
-                  placeholder="Description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Field</label>
-                <select
-                  className="Auth_input"
-                  name="field"
-                  value={formData.field}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="" disabled>Select Field</option>
-                  <option value="Frontend Development">Frontend Development</option>
-                  <option value="Programming Language">Programming Language</option>
-                  <option value="Backend Development">Backend Development</option>
-                  <option value="UI/UX">UI/UX</option>
-                  <option value="Quality Assurance">Quality Assurance</option>
-                </select>
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Start Date</label>
-                <input
-                  className="Auth_input"
-                  name="startDate"
-                  type="date"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">End Date</label>
-                <input
-                  className="Auth_input"
-                  name="endDate"
-                  type="date"
-                  value={formData.endDate}
-                  onChange={(e) => {
-                    const { name, value } = e.target;
-                    if (new Date(value) < new Date(formData.startDate)) {
-                      alert("End date cannot be earlier than start date.");
-                      return;
-                    }
-                    handleChange(e);
-                  }}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Level</label>
-                <input
-                  type='number'
-                  className="Auth_input"
-                  name="level"
-                  placeholder="Level"
-                  value={formData.level}
-                  onChange={(e) => {
-                    const { name, value } = e.target;
-                    if (value < 0 || value > 100) {
-                      alert("Level must be between 0 and 100.");
-                      return;
-                    }
-                    handleChange(e);
-                  }}
-                  required
-                />
-              </div>
-              <button type="submit" className="Auth_button">Update</button>
-            </form >
-          </div >
-        </div >
-      </div >
+      <NavBar />
+      <div className="pro-learning-container">
+        <div className="pro-learning-header">
+          <h2>Update  Your Learning Progress</h2>
+          <p>Update your learning journey and achievements</p>
+        </div>
+
+        <form className="pro-learning-form" onSubmit={handleSubmit}>
+          <div className="pro-form-group">
+            <label>Title</label>
+            <input
+              className="pro-form-input"
+              name="title"
+              placeholder="Enter progress title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="pro-date-inputs">
+            <div className="pro-form-group">
+              <label>Start Date</label>
+              <input
+                className="pro-form-input"
+                name="startDate"
+                type="date"
+                value={formData.startDate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="pro-form-group">
+              <label>End Date</label>
+              <input
+                className="pro-form-input"
+                name="endDate"
+                type="date"
+                value={formData.endDate}
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  if (new Date(value) < new Date(formData.startDate)) {
+                    alert("End date cannot be earlier than start date.");
+                    return;
+                  }
+                  handleChange(e);
+                }}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="pro-form-group">
+            <label>Description</label>
+            <textarea
+              className="pro-form-textarea"
+              name="description"
+              placeholder="Describe what you've learned"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="pro-form-group">
+            <label>Feedback</label>
+            <textarea
+              className="pro-form-textarea"
+              name="feedBack"
+              placeholder="Add any feedback or reflections"
+              value={formData.feedBack}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="pro-submit-btn">Update Progress</button>
+        </form>
+      </div>
     </div>
   );
 }

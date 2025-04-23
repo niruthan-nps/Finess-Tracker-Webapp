@@ -15,6 +15,7 @@ import AddNewPost from "./Pages/PostManagement/AddNewPost";
 import AllPost from "./Pages/PostManagement/AllPost";
 import UpdatePost from "./Pages/PostManagement/UpdatePost";
 import UserProfile from "./Pages/UserManagement/UserProfile";
+import MyLearningProgress from "./Pages/LearningProgress/MyLearningProgress";
 
 function ProtectedRoute({ children }) {
   const userID = localStorage.getItem("userID");
@@ -36,7 +37,7 @@ function App() {
       if (userID && name) {
         localStorage.setItem("userID", userID);
         localStorage.setItem("userType", "google");
-        navigate("/allLearningPost");
+        navigate("/allPost");
       } else {
         alert("Login failed. Missing user information.");
       }
@@ -65,6 +66,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AllLearningPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/MylearningProgress"
+            element={
+              <ProtectedRoute>
+                <MyLearningProgress />
               </ProtectedRoute>
             }
           />

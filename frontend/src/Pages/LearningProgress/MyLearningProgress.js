@@ -1,20 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { FaUserCircle,FaPen } from "react-icons/fa";
+import { FaUserCircle, FaEdit, FaTrash, FaPen } from "react-icons/fa";
 import './LearningPro.css';
-import NavBar from '../../Components/NavBar/NavBar'
-function AllLearningProgress() {
+import NavBar from '../../Components/NavBar/NavBar';
+import { useNavigate } from 'react-router-dom';
+
+function MyLearningProgress() {
   const [progressData, setProgressData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const navigate = useNavigate();
+  const userID = localStorage.getItem("userID");
 
   useEffect(() => {
     fetch('http://localhost:8080/learningProgress')
       .then((response) => response.json())
       .then((data) => {
-        setProgressData(data);
-        setFilteredData(data);
+        const userSpecificData = data.filter(progress => progress.postOwnerID === userID);
+        setProgressData(userSpecificData);
+        setFilteredData(userSpecificData);
       })
       .catch((error) => console.error('Error fetching learning progress data:', error));
-  }, []);
+  }, [userID]);
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this learning progress?")) {
+      fetch(`http://localhost:8080/learningProgress/${id}`, {
+        method: 'DELETE',
+      })
+        .then(() => {
+          const updatedData = filteredData.filter(progress => progress.id !== id);
+          setFilteredData(updatedData);
+          alert("Learning progress deleted successfully.");
+        })
+        .catch((error) => console.error('Error deleting learning progress:', error));
+    }
+  };
 
   return (
     <div>
@@ -24,7 +43,7 @@ function AllLearningProgress() {
           <h1>Learning Progress</h1>
           <p>Track and manage your learning journey</p>
         </div>
-  <div className='create_btn' onClick={()=>(window.location.href='/addLearningProgress')}>
+        <div className='create_btn' onClick={()=>(window.location.href='/addLearningProgress')}>
           <FaPen className='create_btn_icon' />
         </div>
         <div className="progress-grid">
@@ -65,6 +84,21 @@ function AllLearningProgress() {
                     </div>
                   </div>
                 </div>
+
+                <div className="card-actions">
+                  <button
+                    className="edit-btn"
+                    onClick={() => navigate(`/updateLearningProgress/${progress.id}`)}
+                  >
+                    <FaEdit /> Update
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(progress.id)}
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                </div>
               </div>
             ))
           )}
@@ -74,4 +108,4 @@ function AllLearningProgress() {
   );
 }
 
-export default AllLearningProgress;
+export default MyLearningProgress;
