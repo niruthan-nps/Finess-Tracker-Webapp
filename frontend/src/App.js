@@ -3,7 +3,6 @@ import { Route, Routes, Navigate } from "react-router";
 import { useNavigate } from "react-router-dom";
 import AddLeariningPost from "./Pages/LearningSystem/AddLeariningPost";
 import AllLearningPost from "./Pages/LearningSystem/AllLearningPost";
-import UpdateLearningPost from "./Pages/LearningSystem/UpdateLearningPost";
 import UserLogin from "./Pages/UserManagement/UserLogin";
 import UserRegister from "./Pages/UserManagement/UserRegister";
 import UpdateUserProfile from "./Pages/UserManagement/UpdateUserProfile";
@@ -16,6 +15,8 @@ import AllPost from "./Pages/PostManagement/AllPost";
 import UpdatePost from "./Pages/PostManagement/UpdatePost";
 import UserProfile from "./Pages/UserManagement/UserProfile";
 import MyLearningProgress from "./Pages/LearningProgress/MyLearningProgress";
+import MyLearningPost from "./Pages/LearningSystem/MyLearningPost";
+import UpdateLearnPost from "./Pages/LearningSystem/UpdateLearnPost";
 
 function ProtectedRoute({ children }) {
   const userID = localStorage.getItem("userID");
@@ -78,10 +79,10 @@ function App() {
             }
           />
           <Route
-            path="/updateLearningPost/:id"
+            path="/updateLearnPost/:id"
             element={
               <ProtectedRoute>
-                <UpdateLearningPost />
+                <UpdateLearnPost />
               </ProtectedRoute>
             }
           />
@@ -114,6 +115,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AllLearningProgress />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/myLearningPlan"
+            element={
+              <ProtectedRoute>
+                <MyLearningPost />
               </ProtectedRoute>
             }
           />

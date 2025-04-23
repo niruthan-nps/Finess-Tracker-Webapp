@@ -31,7 +31,7 @@ function NavBar() {
           </div>
           <div className="nav-item" onClick={() => navigate('/allLearningPost')}>
             <FaBook className="nav-icon" />
-            <span>Learning System</span>
+            <span>Learning Posts</span>
           </div>
         </nav>
         

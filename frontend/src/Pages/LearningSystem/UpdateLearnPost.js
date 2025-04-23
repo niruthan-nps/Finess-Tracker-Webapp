@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import './LearningPost.css';
 import NavBar from '../../Components/NavBar/NavBar';
 
-function AddLeariningPost() {
+function UpdateLearnPost() {
+  const { id } = useParams(); // Get the post ID from the URL
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     plan: '',
@@ -12,45 +14,26 @@ function AddLeariningPost() {
     outCome: '',
     postOwnerID: '',
     postOwnerName: '',
-    createdAt: '',
   });
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const userId = localStorage.getItem('userID');
-    if (userId) {
-      setFormData((prevData) => ({ ...prevData, postOwnerID: userId }));
-      fetch(`http://localhost:8080/user/${userId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data && data.fullname) {
-            setFormData((prevData) => ({ ...prevData, postOwnerName: data.fullname }));
-          }
-        })
-        .catch((error) => console.error('Error fetching user data:', error));
-    }
-  }, []);
+    // Fetch the existing post data
+    axios.get(`http://localhost:8080/learningSystem/${id}`)
+      .then((response) => {
+        setFormData(response.data);
+      })
+      .catch((error) => console.error('Error fetching post data:', error));
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newPost = { ...formData, createdAt: new Date().toISOString() };
     try {
-      await axios.post('http://localhost:8080/learningSystem', newPost);
-      alert('Post added successfully!');
-      setFormData({
-        title: '',
-        plan: '',
-        method: '',
-        outCome: '',
-        postOwnerID: '',
-        postOwnerName: '',
-        createdAt: '',
-      });
+      await axios.put(`http://localhost:8080/learningSystem/${id}`, formData);
+      alert('Post updated successfully!');
       navigate('/myLearningPlan');
     } catch (error) {
-      console.error('Error adding post:', error);
-      alert('Failed to add post.');
+      console.error('Error updating post:', error);
+      alert('Failed to update post.');
     }
   };
 
@@ -59,8 +42,8 @@ function AddLeariningPost() {
       <NavBar />
       <div className="LPost-container">
         <div className="LPost-header">
-          <h2>Add Learning Post</h2>
-          <p>Share your learning journey with the community</p>
+          <h2>Update Learning Post</h2>
+          <p>Edit your learning journey details</p>
         </div>
 
         <form className="LPost-form" onSubmit={handleSubmit}>
@@ -109,11 +92,11 @@ function AddLeariningPost() {
             />
           </div>
 
-          <button type="submit" className="LPost-submit-btn">Submit Post</button>
+          <button type="submit" className="LPost-submit-btn">Update Post</button>
         </form>
       </div>
     </div>
   );
 }
 
-export default AddLeariningPost;
+export default UpdateLearnPost;

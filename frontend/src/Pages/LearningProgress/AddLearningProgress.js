@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LearningPro.css';
 import NavBar from '../../Components/NavBar/NavBar';
-
 function AddLearningProgress() {
   const [formData, setFormData] = useState({
     title: '',
@@ -54,7 +53,7 @@ function AddLearningProgress() {
 
   return (
     <div>
-      <NavBar/>
+      <NavBar />
       <div className="pro-learning-container">
         <div className="pro-learning-header">
           <h2>Add Learning Progress</h2>

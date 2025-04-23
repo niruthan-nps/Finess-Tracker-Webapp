@@ -4,6 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +21,12 @@ public class LearningSystemModel {
     private String outCome;
     private String postOwnerID;
     private String postOwnerName;
+    private LocalDateTime createdAt;
 
     public LearningSystemModel() {
     }
 
-    public LearningSystemModel(String id, String title, String plan, String method, String outCome, String postOwnerID, String postOwnerName) {
+    public LearningSystemModel(String id, String title, String plan, String method, String outCome, String postOwnerID, String postOwnerName, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.plan = plan;
@@ -32,6 +34,7 @@ public class LearningSystemModel {
         this.outCome = outCome;
         this.postOwnerID = postOwnerID;
         this.postOwnerName = postOwnerName;
+        this.createdAt = createdAt;
     }
 
     public String getId() {
@@ -88,5 +91,13 @@ public class LearningSystemModel {
 
     public void setPostOwnerName(String postOwnerName) {
         this.postOwnerName = postOwnerName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

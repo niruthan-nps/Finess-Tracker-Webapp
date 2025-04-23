@@ -24,12 +24,19 @@ public class LearningSystemController {
 
     @PostMapping("/learningSystem")
     public LearningSystemModel newLearningSystemModel(@RequestBody LearningSystemModel newLearningSystemModel) {
+        newLearningSystemModel.setCreatedAt(LocalDateTime.now());
         return learningSystemRepository.save(newLearningSystemModel);
     }
 
     @GetMapping("/learningSystem")
     List<LearningSystemModel> getAll() {
         return learningSystemRepository.findAll();
+    }
+
+    @GetMapping("/learningSystem/{id}")
+    public LearningSystemModel getById(@PathVariable String id) {
+        return learningSystemRepository.findById(id)
+                .orElseThrow(() -> new LearningSystemNotFoundException(id));
     }
 
     @PutMapping("/learningSystem/{id}")
