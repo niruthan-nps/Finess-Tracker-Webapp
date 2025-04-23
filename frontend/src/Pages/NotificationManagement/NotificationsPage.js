@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './notification.css'
+import './notification.css';
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { FaBell } from "react-icons/fa";
+import NavBar from '../../Components/NavBar/NavBar';
 function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const userId = localStorage.getItem('userID');
@@ -10,7 +13,7 @@ function NotificationsPage() {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/notifications/${userId}`);
-        console.log('API Response:', response.data); // Debugging log
+        console.log('API Response:', response.data); 
         setNotifications(response.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -42,41 +45,57 @@ function NotificationsPage() {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div>
-      <div className='continer'>
-        <div className='continSection'>
-          <div className='post_card_continer'>
-            {notifications.length === 0 ? (
-              <div className='not_found_box'>
-                <div className='not_found_img'></div>
-                <p className='not_found_msg'>No notifications found.</p>
-              </div>
-            ) : (
-              notifications.map((notification) => (
-                <div key={notification.id} className='post_card'>
-                  <div className='continer_set'>
-                    <p className='noty_topic'>{notification.message}</p>
-                    <p className='noty_time'>{notification.createdAt}</p>
-                  </div>
-                  <div className='noty_action_btn_con'>
-                    <button
-                      className='mark_redbtn'
-                      onClick={() => handleMarkAsRead(notification.id)}
-                      style={{ display: notification.read ? 'none' : 'inline-block' }}
-                    >
-                      Mark as Read
-                    </button>
-                    <RiDeleteBin6Fill
-                      onClick={() => handleDelete(notification.id)}
-                      className='action_btn_icon' />
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+      <NavBar/>
+    <div className="noty-container">
+      <div className="noty-header">
+        <h1><FaBell /> Notifications</h1>
+        <p>Your recent activities and updates</p>
       </div>
+      
+      <div className="noty-list">
+        {notifications.length === 0 ? (
+          <div className="noty-empty">
+            <p>No notifications found.</p>
+          </div>
+        ) : (
+          notifications.map((notification) => (
+            <div 
+              key={notification.id} 
+              className={`noty-item ${notification.read ? 'read' : 'unread'}`}
+            >
+              <div className="noty-content">
+                <p className="noty-message">{notification.message}</p>
+                <p className="noty-date">{formatDate(notification.createdAt)}</p>
+              </div>
+              
+              <div className="noty-actions">
+                {!notification.read && (
+                  <button
+                    className="noty-read-btn"
+                    onClick={() => handleMarkAsRead(notification.id)}
+                  >
+                    <IoMdCheckmarkCircleOutline /> 
+                  </button>
+                )}
+                <button
+                  className="noty-delete-btn"
+                  onClick={() => handleDelete(notification.id)}
+                >
+                  <RiDeleteBin6Fill />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
     </div>
   );
 }

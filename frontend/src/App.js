@@ -17,6 +17,7 @@ import UserProfile from "./Pages/UserManagement/UserProfile";
 import MyLearningProgress from "./Pages/LearningProgress/MyLearningProgress";
 import MyLearningPost from "./Pages/LearningSystem/MyLearningPost";
 import UpdateLearnPost from "./Pages/LearningSystem/UpdateLearnPost";
+import MyPost from "./Pages/PostManagement/MyPost";
 
 function ProtectedRoute({ children }) {
   const userID = localStorage.getItem("userID");
@@ -155,6 +156,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AllPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/myPosts"
+            element={
+              <ProtectedRoute>
+                <MyPost />
               </ProtectedRoute>
             }
           />

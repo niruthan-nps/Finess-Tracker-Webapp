@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './post.css'
+import NavBar from '../../Components/NavBar/NavBar'
 function AddNewPost() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [media, setMedia] = useState([]);
-  const [mediaPreviews, setMediaPreviews] = useState([]); // For storing media preview objects
+  const [mediaPreviews, setMediaPreviews] = useState([]); 
   const userID = localStorage.getItem('userID');
 
   const handleMediaChange = (e) => {
     const files = Array.from(e.target.files);
-    const maxFileSize = 50 * 1024 * 1024; // 50MB
+    const maxFileSize = 50 * 1024 * 1024;
 
     let imageCount = 0;
     let videoCount = 0;
@@ -43,7 +45,6 @@ function AddNewPost() {
         window.location.reload();
       }
 
-      // Add file preview object with type and URL
       previews.push({ type: file.type, url: URL.createObjectURL(file) });
     }
 
@@ -58,7 +59,7 @@ function AddNewPost() {
     }
 
     setMedia(files);
-    setMediaPreviews(previews); // Set preview objects
+    setMediaPreviews(previews);
   };
 
   const handleSubmit = async (e) => {
@@ -74,7 +75,7 @@ function AddNewPost() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert('Post created successfully!');
-      window.location.reload();
+      window.location.href = '/allPost';
     } catch (error) {
       console.error(error);
       alert('Failed to create post.');
@@ -84,64 +85,78 @@ function AddNewPost() {
 
   return (
     <div>
-      <div className='continer'>
-        <div className='continSection'>
-          <div className="from_continer">
-            <p className="Auth_heading">Create New Post</p>
-            <form onSubmit={handleSubmit} className='from_data'>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Title</label>
-                <input
-                  className="Auth_input"
-                  type="text"
-                  placeholder="Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Description</label>
-                <textarea
-                  className="Auth_input"
-                  placeholder="Description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  rows={3}
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Media</label>
-                <div className='seket_media'>
-                  {mediaPreviews.map((preview, index) => (
-                    <div key={index}>
-                      {preview.type.startsWith('video/') ? (
-                        <video controls className='media_file_se'>
-                          <source src={preview.url} type={preview.type} />
-                          Your browser does not support the video tag.
-                        </video>
-                      ) : (
-                        <img className='media_file_se' src={preview.url} alt={`Media Preview ${index}`} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <input
-                  className="Auth_input"
-                  type="file"
-                  accept="image/jpeg,image/png,image/jpg,video/mp4"
-                  multiple
-                  onChange={handleMediaChange}
-                />
-              </div>
-              <button type="submit" className="Auth_button">Submit</button>
-            </form>
-          </div>
+      <NavBar/>
+      <div className="pro-learning-container">
+        <div className="pro-learning-header">
+          <h2>Create New Post</h2>
+          <p>Share an update with your images or a short video.</p>
         </div>
+
+        <form className="pro-learning-form" onSubmit={handleSubmit}>
+          <div className="pro-form-group">
+            <label htmlFor="title">Title</label>
+            <input
+              id="title"
+              className="pro-form-input"
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="pro-form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              className="pro-form-textarea"
+              placeholder="Write your description..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              rows={3}
+            />
+          </div>
+
+          <div className="pro-form-group">
+            <label htmlFor="media">Media</label>
+            <div className="media-preview-container">
+              {mediaPreviews.map((preview, index) => (
+                <div key={index} className="media-preview-item">
+                  {preview.type.startsWith('video/') ? (
+                    <video controls className="media-file">
+                      <source src={preview.url} type={preview.type} />
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : (
+                    <img className="media-file" src={preview.url} alt={`Media Preview ${index}`} />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="pro-upload-wrapper">
+              <label htmlFor="media" className="pro-upload-label">
+                📎 Upload Media (Images or MP4)
+              </label>
+              <input
+                id="media"
+                type="file"
+                accept="image/jpeg,image/png,image/jpg,video/mp4"
+                multiple
+                onChange={handleMediaChange}
+                className="pro-upload-input"
+              />
+            </div>
+
+          </div>
+
+          <button type="submit" className="pro-submit-btn">Submit</button>
+        </form>
       </div>
     </div>
   );
+
 }
 
 export default AddNewPost;

@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaTrash } from 'react-icons/fa';
+
 function UpdatePost() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [existingMedia, setExistingMedia] = useState([]); 
-  const [newMedia, setNewMedia] = useState([]); 
-  const [loading, setLoading] = useState(true); 
-
+  const [existingMedia, setExistingMedia] = useState([]);
+  const [newMedia, setNewMedia] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newMediaPreviews, setNewMediaPreviews] = useState([]);
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/posts/${id}`);
         const post = response.data;
-        setTitle(post.title || ''); 
-        setDescription(post.description || ''); 
-        setExistingMedia(post.media || []); 
-        setLoading(false); 
+        setTitle(post.title || '');
+        setDescription(post.description || '');
+        setExistingMedia(post.media || []);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching post:', error);
         alert('Failed to fetch post details.');
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -31,15 +33,13 @@ function UpdatePost() {
 
   const handleDeleteMedia = async (mediaUrl) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this media file?');
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
     try {
       await axios.delete(`http://localhost:8080/posts/${id}/media`, {
         data: { mediaUrl },
       });
-      setExistingMedia(existingMedia.filter((url) => url !== mediaUrl)); 
+      setExistingMedia(existingMedia.filter((url) => url !== mediaUrl));
       alert('Media file deleted successfully!');
     } catch (error) {
       console.error('Error deleting media file:', error);
@@ -70,11 +70,13 @@ function UpdatePost() {
 
   const handleNewMediaChange = async (e) => {
     const files = Array.from(e.target.files);
-    const maxFileSize = 50 * 1024 * 1024; 
+    const maxFileSize = 50 * 1024 * 1024;
     const maxImageCount = 3;
 
     let imageCount = existingMedia.filter((url) => !url.endsWith('.mp4')).length;
     let videoCount = existingMedia.filter((url) => url.endsWith('.mp4')).length;
+
+    const validFiles = [];
 
     for (const file of files) {
       if (file.size > maxFileSize) {
@@ -105,11 +107,29 @@ function UpdatePost() {
         alert(`Unsupported file type: ${file.type}`);
         return;
       }
+
+      validFiles.push(file);
     }
 
-    setNewMedia(files);
+    setNewMedia(validFiles);
+    const previews = validFiles.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setNewMediaPreviews(previews);
   };
 
+  const handleRemoveNewMedia = (index) => {
+    const updatedPreviews = [...newMediaPreviews];
+    const updatedMedia = [...newMedia];
+
+    URL.revokeObjectURL(updatedPreviews[index].preview); // Clean up memory
+    updatedPreviews.splice(index, 1);
+    updatedMedia.splice(index, 1);
+
+    setNewMediaPreviews(updatedPreviews);
+    setNewMedia(updatedMedia);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -122,82 +142,103 @@ function UpdatePost() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert('Post updated successfully!');
-      navigate('/allPost');
+      navigate('/myPosts');
     } catch (error) {
       console.error('Error updating post:', error);
       alert('Failed to update post.');
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>; 
-  }
+
+  if (loading) return <div className="loading">Loading...</div>;
 
   return (
-    <div>
-      <div className='continer'>
-        <div className='continSection'>
-          <div className="from_continer">
-            <p className="Auth_heading">Create New Post</p>
-            <form onSubmit={handleSubmit} className='from_data'>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Title</label>
-                <input
-                  className="Auth_input"
-                  type="text"
-                  placeholder="Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
+    <div className="update-post-container">
+      <h2>Update Post</h2>
+      <form onSubmit={handleSubmit} className="update-form">
+        <div className="form-group">
+          <label>Title</label>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Description</label>
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            rows={3}
+          />
+        </div>
+        <div className="form-group">
+          <label>Media</label>
+          <div className="media-preview-wrapper">
+            {existingMedia.map((mediaUrl, index) => (
+              <div key={index} className="media-preview-item">
+                {mediaUrl.endsWith('.mp4') ? (
+                  <video controls>
+                    <source src={`http://localhost:8080${mediaUrl}`} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <img src={`http://localhost:8080${mediaUrl}`} alt={`Media ${index}`} />
+                )}
+                <button
+                  className="media-delete-btn"
+                  type="button"
+                  onClick={() => handleDeleteMedia(mediaUrl)}
+                >
+                  <FaTrash />
+                </button>
               </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Description</label>
-                <textarea
-                  className="Auth_input"
-                  placeholder="Description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  rows={3}
-                />
+            ))}
+            {newMediaPreviews.length > 0 && (
+              <div className="media-preview-wrapper">
+                {newMediaPreviews.map((item, index) => (
+                  <div key={index} className="media-preview-item">
+                    {item.file.type === 'video/mp4' ? (
+                      <video controls>
+                        <source src={item.preview} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <img src={item.preview} alt={`Preview ${index}`} />
+                    )}
+                    <button
+                      type="button"
+                      className="media-delete-btn"
+                      onClick={() => handleRemoveNewMedia(index)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                ))}
               </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Media</label>
-                <div className='seket_media'>
-                  {existingMedia.map((mediaUrl, index) => (
-                    <div key={index}>
-                      {mediaUrl.endsWith('.mp4') ? (
-                        <video controls className='media_file_se'>
-                          <source src={`http://localhost:8080${mediaUrl}`} type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
-                      ) : (
-                        <img className='media_file_se' src={`http://localhost:8080${mediaUrl}`} alt={`Media ${index}`} />
-                      )}
-                      <button
-                      className='rem_btn'
-                        onClick={() => handleDeleteMedia(mediaUrl)}
+            )}
 
-                      >
-                        X
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <input
-                  className="Auth_input"
-                  type="file"
-                  accept="image/jpeg,image/png,image/jpg,video/mp4"
-                  multiple
-                  onChange={handleNewMediaChange}
-                />
-              </div>
-              <button type="submit" className="Auth_button">Submit</button>
-            </form>
+          </div>
+
+          <div className="file-upload-wrapper">
+            <label htmlFor="newMedia" className="upload-label">
+              📎 Upload Media (JPG, PNG, MP4)
+            </label>
+            <input
+              id="newMedia"
+              type="file"
+              accept="image/jpeg,image/png,image/jpg,video/mp4"
+              multiple
+              onChange={handleNewMediaChange}
+              className="hidden-file-input"
+            />
           </div>
         </div>
-      </div>
+        <button type="submit" className="submit-btn">Update Post</button>
+      </form>
     </div>
   );
 }

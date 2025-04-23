@@ -3,21 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { IoSend } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
+import { FaUserCircle, FaPen } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { BiSolidLike } from "react-icons/bi";
-import Modal from 'react-modal'; 
+import NavBar from '../../Components/NavBar/NavBar';
+import Modal from 'react-modal';
 
-Modal.setAppElement('#root'); 
+Modal.setAppElement('#root');
 
 function AllPost() {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
-  const [postOwners, setPostOwners] = useState({}); 
-  const [showMyPosts, setShowMyPosts] = useState(false); 
+  const [postOwners, setPostOwners] = useState({});
+  const [showMyPosts, setShowMyPosts] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
-  const [followedUsers, setFollowedUsers] = useState([]); 
-  const [newComment, setNewComment] = useState({}); 
+  const [followedUsers, setFollowedUsers] = useState([]);
+  const [newComment, setNewComment] = useState({});
   const [editingComment, setEditingComment] = useState({});
   const navigate = useNavigate();
   const loggedInUserID = localStorage.getItem('userID');
@@ -27,9 +29,9 @@ function AllPost() {
       try {
         const response = await axios.get('http://localhost:8080/posts');
         setPosts(response.data);
-        setFilteredPosts(response.data); 
+        setFilteredPosts(response.data);
 
-        const userIDs = [...new Set(response.data.map((post) => post.userID))]; 
+        const userIDs = [...new Set(response.data.map((post) => post.userID))];
         const ownerPromises = userIDs.map((userID) =>
           axios.get(`http://localhost:8080/user/${userID}`)
             .then((res) => ({
@@ -38,7 +40,7 @@ function AllPost() {
             }))
             .catch((error) => {
               console.error(`Error fetching user details for userID ${userID}:`, error);
-              return { userID, fullName: 'Anonymous' }; 
+              return { userID, fullName: 'Anonymous' };
             })
         );
         const owners = await Promise.all(ownerPromises);
@@ -46,10 +48,10 @@ function AllPost() {
           acc[owner.userID] = owner.fullName;
           return acc;
         }, {});
-        console.log('Post Owners Map:', ownerMap); 
+        console.log('Post Owners Map:', ownerMap);
         setPostOwners(ownerMap);
       } catch (error) {
-        console.error('Error fetching posts:', error); 
+        console.error('Error fetching posts:', error);
       }
     };
 
@@ -75,14 +77,14 @@ function AllPost() {
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this post?');
     if (!confirmDelete) {
-      return; 
+      return;
     }
 
     try {
       await axios.delete(`http://localhost:8080/posts/${postId}`);
       alert('Post deleted successfully!');
-      setPosts(posts.filter((post) => post.id !== postId)); 
-      setFilteredPosts(filteredPosts.filter((post) => post.id !== postId)); 
+      setPosts(posts.filter((post) => post.id !== postId));
+      setFilteredPosts(filteredPosts.filter((post) => post.id !== postId));
     } catch (error) {
       console.error('Error deleting post:', error);
       alert('Failed to delete post.');
@@ -90,7 +92,7 @@ function AllPost() {
   };
 
   const handleUpdate = (postId) => {
-    navigate(`/updatePost/${postId}`); 
+    navigate(`/updatePost/${postId}`);
   };
 
   const handleMyPostsToggle = () => {
@@ -154,7 +156,7 @@ function AllPost() {
       alert('Please log in to comment.');
       return;
     }
-    const content = newComment[postId] || ''; 
+    const content = newComment[postId] || '';
     if (!content.trim()) {
       alert('Comment cannot be empty.');
       return;
@@ -222,11 +224,11 @@ function AllPost() {
         prevPosts.map((post) =>
           post.id === postId
             ? {
-                ...post,
-                comments: post.comments.map((comment) =>
-                  comment.id === commentId ? { ...comment, content } : comment
-                ),
-              }
+              ...post,
+              comments: post.comments.map((comment) =>
+                comment.id === commentId ? { ...comment, content } : comment
+              ),
+            }
             : post
         )
       );
@@ -235,16 +237,16 @@ function AllPost() {
         prevFilteredPosts.map((post) =>
           post.id === postId
             ? {
-                ...post,
-                comments: post.comments.map((comment) =>
-                  comment.id === commentId ? { ...comment, content } : comment
-                ),
-              }
+              ...post,
+              comments: post.comments.map((comment) =>
+                comment.id === commentId ? { ...comment, content } : comment
+              ),
+            }
             : post
         )
       );
 
-      setEditingComment({}); 
+      setEditingComment({});
     } catch (error) {
       console.error('Error saving comment:', error);
     }
@@ -255,40 +257,29 @@ function AllPost() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setSelectedMedia(null);
-    setIsModalOpen(false);
-  };
-
   return (
     <div>
-      <div className='continer'>
+      <NavBar />
+      <div className='create_btn' onClick={() => (window.location.href = '/addNewPost')}>
+        <FaPen className='create_btn_icon' />
+      </div>
+      <div className='posts-container'>
         <div className='continSection'>
-          <button
-            className='actionButton_add'
-            onClick={() => (window.location.href = '/addNewPost')}
-          >
-            create post
-          </button>
-          <button
-            className='action_btn_my'
-            onClick={handleMyPostsToggle}
-          >
-            {showMyPosts ? 'All Posts' : 'My Posts'}
-          </button>
           <div className='post_card_continer'>
             {filteredPosts.length === 0 ? (
-              <div className='not_found_box'>
-                <div className='not_found_img'></div>
-                <p className='not_found_msg'>No posts found. Please create a new post.</p>
-                <button className='not_found_btn' onClick={() => (window.location.href = '/addNewPost')}>Create New Post</button>
+              <div className="no-posts">
+                <h3>No posts found</h3>
+                <p>Be the first to share something amazing!</p>
               </div>
             ) : (
               filteredPosts.map((post) => (
-                <div key={post.id} className='post_card'>
-                  <div className='user_details_card'>
-                    <div className='name_section_post'>
-                      <p className='name_section_post_owner_name'>{postOwners[post.userID] || 'Anonymous'}</p>
+                <div key={post.id} className='post-card'>
+                  <div className="post-header">
+                    <div className="user-info">
+                      <div className="avatar">
+                        <FaUserCircle className="user-icon" />
+                      </div>
+                      <span className="username">{postOwners[post.userID] || 'Anonymous'}</span>
                       {post.userID !== loggedInUserID && (
                         <button
                           className={followedUsers.includes(post.userID) ? 'flow_btn_unfalow' : 'flow_btn'}
@@ -298,27 +289,20 @@ function AllPost() {
                         </button>
                       )}
                     </div>
-                    {post.userID === loggedInUserID && (
-                      <div>
-                        <div className='action_btn_icon_post'>
-                          <FaEdit
-                            onClick={() => handleUpdate(post.id)} className='action_btn_icon' />
-                          <RiDeleteBin6Fill
-                            onClick={() => handleDelete(post.id)}
-                            className='action_btn_icon' />
-                        </div>
-                      </div>
-                    )}
                   </div>
-                  <div className='user_details_card_di'>
-                    <p className='card_post_title'>{post.title}</p>
-                    <p className='card_post_description' style={{ whiteSpace: "pre-line" }}>{post.description}</p>
+                  <div className='dix_con'>
+                    <div className="post-title-container">
+                      <h3 className="post-title">{post.title}</h3>
+                    </div>
+                    <div className="post-description">
+                      <p style={{ whiteSpace: "pre-line" }}>{post.description}</p>
+                    </div>
                   </div>
-                  <div className="media-collage">
+                  <div className="media-gallery">
                     {post.media.slice(0, 4).map((mediaUrl, index) => (
                       <div
                         key={index}
-                        className={`media-item ${post.media.length > 4 && index === 3 ? 'media-overlay' : ''}`}
+                        className={`media-item ${post.media.length > 4 && index === 3 ? 'has-overlay' : ''}`}
                         onClick={() => openModal(mediaUrl)}
                       >
                         {mediaUrl.endsWith('.mp4') ? (
@@ -330,7 +314,7 @@ function AllPost() {
                           <img src={`http://localhost:8080${mediaUrl}`} alt="Post Media" />
                         )}
                         {post.media.length > 4 && index === 3 && (
-                          <div className="overlay-text">+{post.media.length - 4}</div>
+                          <div className="overlay">+{post.media.length - 4}</div>
                         )}
                       </div>
                     ))}
@@ -434,7 +418,7 @@ function AllPost() {
                         </div>
                       </div>
                     ))}
-                  
+
                   </div>
                 </div>
               ))
@@ -443,24 +427,7 @@ function AllPost() {
         </div>
       </div>
 
-      {/* Modal for displaying full media */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Media Modal"
-        className="media-modal"
-        overlayClassName="media-modal-overlay"
-      >
-        <button className="close-modal-btn" onClick={closeModal}>x</button>
-        {selectedMedia && selectedMedia.endsWith('.mp4') ? (
-          <video controls className="modal-media">
-            <source src={`http://localhost:8080${selectedMedia}`} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <img src={`http://localhost:8080${selectedMedia}`} alt="Full Media" className="modal-media" />
-        )}
-      </Modal>
+     
     </div>
   );
 }

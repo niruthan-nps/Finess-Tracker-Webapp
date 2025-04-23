@@ -35,7 +35,7 @@ function UserLogin() {
       } else if (response.status === 401) {
         alert('Invalid credentials!');
       } else {
-        alert('Failed to login!');
+        alert('Invalid credentials!');
       }
     } catch (error) {
       console.error('Error:', error);
