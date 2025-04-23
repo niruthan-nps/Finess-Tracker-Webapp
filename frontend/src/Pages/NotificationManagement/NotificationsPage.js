@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import SideBar from '../../Components/SideBar/SideBar';
 import './notification.css'
 import { RiDeleteBin6Fill } from "react-icons/ri";
 function NotificationsPage() {
@@ -46,7 +45,6 @@ function NotificationsPage() {
   return (
     <div>
       <div className='continer'>
-        <div><SideBar /></div>
         <div className='continSection'>
           <div className='post_card_continer'>
             {notifications.length === 0 ? (

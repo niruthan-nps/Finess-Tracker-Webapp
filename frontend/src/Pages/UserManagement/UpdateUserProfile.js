@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import SideBar from '../../Components/SideBar/SideBar';
-import { IoMdAdd } from "react-icons/io";
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaEye, FaEyeSlash } from 'react-icons/fa';
+import './UpdateFrom.css'; 
 function UpdateUserProfile() {
   const { id } = useParams();
   const [formData, setFormData] = useState({
@@ -9,21 +9,26 @@ function UpdateUserProfile() {
     email: '',
     password: '',
     phone: '',
-    skills: [],
   });
-  const [skillInput, setSkillInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8080/user/${id}`)
-      .then((response) => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/user/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
-        return response.json();
-      })
-      .then((data) => setFormData(data))
-      .catch((error) => console.error('Error:', error));
+        const data = await response.json();
+        setFormData(data);
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load user data');
+      }
+    };
+    
+    fetchUserData();
   }, [id]);
 
   const handleInputChange = (e) => {
@@ -31,16 +36,8 @@ function UpdateUserProfile() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddSkill = () => {
-    if (skillInput.trim()) {
-      setFormData({ ...formData, skills: [...formData.skills, skillInput] });
-      setSkillInput('');
-    }
-  };
-
-  const handleDeleteSkill = (index) => {
-    const updatedSkills = formData.skills.filter((_, i) => i !== index);
-    setFormData({ ...formData, skills: updatedSkills });
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -51,106 +48,117 @@ function UpdateUserProfile() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+      
       if (response.ok) {
         alert('Profile updated successfully!');
-        window.location.reload();
+        navigate('/userProfile'); 
       } else {
-        alert('Failed to update profile.');
+        const errorData = await response.json();
+        alert(errorData.message || 'Failed to update profile.');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('An error occurred while updating profile.');
     }
   };
 
   return (
-    <div>
-      <div className='continer'>
-        <div><SideBar /></div>
-        <div className='continSection'>
-          <div className="from_continer">
-            <p className="Auth_heading">Update User Profile</p>
-            <form onSubmit={handleSubmit} className="Auth_form">
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Full Name</label>
-                <input
-                  className="Auth_input"
-                  type="text"
-                  name="fullname"
-                  placeholder="Full Name"
-                  value={formData.fullname}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Email Address</label>
-                <input
-                  className="Auth_input"
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Password</label>
-                <input
-                  className="Auth_input"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Phone</label>
-                <input
-                  className="Auth_input"
-                  type="text"
-                  name="phone"
-                  placeholder="Phone"
-                  value={formData.phone}
-                  onChange={(e) => {
-                    const re = /^[0-9\b]{0,10}$/;
-                    if (re.test(e.target.value)) {
-                      handleInputChange(e);
-                    }
-                  }}
-                  maxLength="10"
-                  pattern="[0-9]{10}"
-                  title="Please enter exactly 10 digits."
-                  required
-                />
-              </div>
-              <div className="Auth_formGroup">
-                <label className="Auth_label">Skills</label>
-                <div className='skil_dis_con'>
-                  {formData.skills.map((skill, index) => (
-                    <p className='skil_name' key={index}>{skill}</p>
-                  ))}
-                </div>
-                <div className='skil_addbtn'>
-                  <input
-                    className="Auth_input"
-                    type="text"
-                    placeholder="Add Skill"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                  />
-                  <IoMdAdd onClick={handleAddSkill} className="add_s_btn" />
-
-                </div>
-              </div>
-
-              <button type="submit" className="Auth_button">Update</button>
-
-            </form>
-          </div>
+    <div className="update-update-profile-container">
+      <div className="update-update-profile-inner">
+        <div className="update-update-profile-header">
+          <h2>Update Your Profile</h2>
+          <p>Keep your information up to date to get the best experience on Plusecore</p>
         </div>
+        
+        <form onSubmit={handleSubmit} className="update-update-profile-form">
+          <div className="update-form-group full-width">
+            <label>Full Name</label>
+            <div className="update-input-field">
+              <FaUser className="update-input-icon" />
+              <input
+                type="text"
+                name="fullname"
+                placeholder="Full Name"
+                value={formData.fullname}
+                onChange={handleInputChange}
+                required
+                style={{ paddingLeft: '2.5rem' }}
+              />
+            </div>
+          </div>
+          
+          <div className="update-form-group">
+            <label>Email Address</label>
+            <div className="update-input-field">
+              <FaEnvelope className="update-input-icon" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                style={{ paddingLeft: '2.5rem' }}
+              />
+            </div>
+          </div>
+          
+          <div className="update-form-group">
+            <label>Phone Number</label>
+            <div className="update-input-field">
+              <FaPhone className="update-input-icon" />
+              <input
+                type="text"
+                name="phone"
+                placeholder="Phone"
+                value={formData.phone}
+                onChange={(e) => {
+                  const re = /^[0-9\b]{0,10}$/;
+                  if (re.test(e.target.value)) {
+                    handleInputChange(e);
+                  }
+                }}
+                maxLength="10"
+                pattern="[0-9]{10}"
+                title="Please enter exactly 10 digits."
+                required
+                style={{ paddingLeft: '2.5rem' }}
+              />
+            </div>
+          </div>
+          
+          <div className="update-form-group">
+            <label>Password</label>
+            <div className="update-input-field">
+              <FaLock className="update-input-icon" />
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                style={{ paddingLeft: '2.5rem' }}
+              />
+              <span className="update-password-toggle" onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+          </div>
+          
+          <div className="update-form-actions">
+            <button 
+              type="button" 
+              className="update-cancel-btn"
+              onClick={() => navigate(-1)} // Go back to previous page
+            >
+              Cancel
+            </button>
+            <button type="submit" className="update-update-btn">
+              Update Profile
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

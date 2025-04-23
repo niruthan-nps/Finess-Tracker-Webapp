@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { IoMdAdd } from "react-icons/io";
 import './post.css'
-import SideBar from '../../Components/SideBar/SideBar';
 function UpdateLearningPost() {
   const { id } = useParams();
   const [title, setTitle] = useState('');
@@ -57,9 +56,6 @@ function UpdateLearningPost() {
   return (
     <div>
       <div className='continer'>
-        <div>
-          <SideBar />
-        </div>
         <div className='continSection'>
           <div className="from_continer">
             <p className="Auth_heading">Update Learning Post</p>

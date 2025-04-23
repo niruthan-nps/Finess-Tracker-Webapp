@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import SideBar from '../../Components/SideBar/SideBar';
 import { FaUserCircle } from "react-icons/fa";
 import { HiCalendarDateRange } from "react-icons/hi2";
 function AllLearningProgress() {
@@ -51,7 +50,6 @@ function AllLearningProgress() {
   return (
     <div>
       <div className='continer'>
-        <div><SideBar /></div>
         <div className='continSection'>
           <button
             className='actionButton_add'

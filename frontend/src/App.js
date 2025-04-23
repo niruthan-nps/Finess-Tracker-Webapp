@@ -7,7 +7,6 @@ import UpdateLearningPost from "./Pages/LearningSystem/UpdateLearningPost";
 import UserLogin from "./Pages/UserManagement/UserLogin";
 import UserRegister from "./Pages/UserManagement/UserRegister";
 import UpdateUserProfile from "./Pages/UserManagement/UpdateUserProfile";
-import RecommendPost from "./Pages/LearningSystem/RecommendPost";
 import AddLearningProgress from "./Pages/LearningProgress/AddLearningProgress";
 import AllLearningProgress from "./Pages/LearningProgress/AllLearningProgress";
 import UpdateLearningProgress from "./Pages/LearningProgress/UpdateLearningProgress";
@@ -15,6 +14,7 @@ import NotificationsPage from "./Pages/NotificationManagement/NotificationsPage"
 import AddNewPost from "./Pages/PostManagement/AddNewPost";
 import AllPost from "./Pages/PostManagement/AllPost";
 import UpdatePost from "./Pages/PostManagement/UpdatePost";
+import UserProfile from "./Pages/UserManagement/UserProfile";
 
 function ProtectedRoute({ children }) {
   const userID = localStorage.getItem("userID");
@@ -35,9 +35,8 @@ function App() {
 
       if (userID && name) {
         localStorage.setItem("userID", userID);
-        alert(`Login successful! Welcome, ${name}`);
-        localStorage.setItem("userType", "googale");
-        navigate("/learningSystem/allLearningPost");
+        localStorage.setItem("userType", "google");
+        navigate("/allLearningPost");
       } else {
         alert("Login failed. Missing user information.");
       }
@@ -54,7 +53,7 @@ function App() {
 
           {/* Protected Routes */}
           <Route
-            path="/learningSystem/addLeariningPost"
+            path="/addLeariningPost"
             element={
               <ProtectedRoute>
                 <AddLeariningPost />
@@ -62,7 +61,7 @@ function App() {
             }
           />
           <Route
-            path="/learningSystem/allLearningPost"
+            path="/allLearningPost"
             element={
               <ProtectedRoute>
                 <AllLearningPost />
@@ -70,7 +69,7 @@ function App() {
             }
           />
           <Route
-            path="/learningSystem/updateLearningPost/:id"
+            path="/updateLearningPost/:id"
             element={
               <ProtectedRoute>
                 <UpdateLearningPost />
@@ -78,10 +77,10 @@ function App() {
             }
           />
           <Route
-            path="/learningSystem/recommendPost"
+            path="/userProfile"
             element={
               <ProtectedRoute>
-                <RecommendPost />
+                <UserProfile />
               </ProtectedRoute>
             }
           />

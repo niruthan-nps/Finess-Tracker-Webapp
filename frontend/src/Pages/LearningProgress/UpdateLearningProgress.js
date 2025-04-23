@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import SideBar from '../../Components/SideBar/SideBar';
 
 function UpdateLearningProgress() {
   const { id } = useParams();
@@ -49,7 +48,6 @@ function UpdateLearningProgress() {
   return (
     <div>
      <div className='continer'>
-        <div> <SideBar /></div>
         <div className='continSection'>
           <div className="from_continer">
             <p className="Auth_heading">Update Learning Progress</p>

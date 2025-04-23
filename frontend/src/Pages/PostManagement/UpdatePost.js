@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import SideBar from '../../Components/SideBar/SideBar';
 function UpdatePost() {
-  const { id } = useParams(); // Get the post ID from the URL
+  const { id } = useParams(); 
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [existingMedia, setExistingMedia] = useState([]); // Initialize as an empty array
-  const [newMedia, setNewMedia] = useState([]); // New media files to upload
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [existingMedia, setExistingMedia] = useState([]); 
+  const [newMedia, setNewMedia] = useState([]); 
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
-    // Fetch the post details
     const fetchPost = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/posts/${id}`);
         const post = response.data;
-        setTitle(post.title || ''); // Ensure title is not undefined
-        setDescription(post.description || ''); // Ensure description is not undefined
-        setExistingMedia(post.media || []); // Ensure media is an array
-        setLoading(false); // Set loading to false after data is fetched
+        setTitle(post.title || ''); 
+        setDescription(post.description || ''); 
+        setExistingMedia(post.media || []); 
+        setLoading(false); 
       } catch (error) {
         console.error('Error fetching post:', error);
         alert('Failed to fetch post details.');
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false); 
       }
     };
 
@@ -41,7 +39,7 @@ function UpdatePost() {
       await axios.delete(`http://localhost:8080/posts/${id}/media`, {
         data: { mediaUrl },
       });
-      setExistingMedia(existingMedia.filter((url) => url !== mediaUrl)); // Remove from UI
+      setExistingMedia(existingMedia.filter((url) => url !== mediaUrl)); 
       alert('Media file deleted successfully!');
     } catch (error) {
       console.error('Error deleting media file:', error);
@@ -72,7 +70,7 @@ function UpdatePost() {
 
   const handleNewMediaChange = async (e) => {
     const files = Array.from(e.target.files);
-    const maxFileSize = 50 * 1024 * 1024; // 50MB
+    const maxFileSize = 50 * 1024 * 1024; 
     const maxImageCount = 3;
 
     let imageCount = existingMedia.filter((url) => !url.endsWith('.mp4')).length;
@@ -132,13 +130,12 @@ function UpdatePost() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Display a loading message while fetching data
+    return <div>Loading...</div>; 
   }
 
   return (
     <div>
       <div className='continer'>
-        <div>   <SideBar /></div>
         <div className='continSection'>
           <div className="from_continer">
             <p className="Auth_heading">Create New Post</p>

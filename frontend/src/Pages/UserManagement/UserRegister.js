@@ -1,25 +1,18 @@
 import React, { useState } from 'react';
-import { IoMdAdd } from "react-icons/io";
+import { FaUser, FaEnvelope, FaLock, FaPhone } from 'react-icons/fa';
+import './user.css';
+import GoogalLogo from './img/glogo.png';
 function UserRegister() {
     const [formData, setFormData] = useState({
         fullname: '',
         email: '',
         password: '',
         phone: '',
-        skills: [],
     });
-    const [skillInput, setSkillInput] = useState('');
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    };
-
-    const handleAddSkill = () => {
-        if (skillInput.trim()) {
-            setFormData({ ...formData, skills: [...formData.skills, skillInput] });
-            setSkillInput('');
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -34,13 +27,8 @@ function UserRegister() {
             isValid = false;
         }
 
-        if (formData.skills.length < 2) {
-            alert("Please add at least two skills.");
-            isValid = false;
-        }
-
         if (!isValid) {
-            return; // Stop execution if validation fails
+            return;
         }
 
         try {
@@ -51,7 +39,7 @@ function UserRegister() {
             });
             if (response.ok) {
                 alert('User registered successfully!');
-                setFormData({ fullname: '', email: '', password: '', phone: '', skills: [] });
+                setFormData({ fullname: '', email: '', password: '', phone: '' });
                 window.location.href = '/'
             } else if (response.status === 409) {
                 alert('Email already exists!');
@@ -64,22 +52,23 @@ function UserRegister() {
     };
 
     return (
-        <div>
-            <div className="Auth_container">
-                <div className="Auth_innerContainer_reg">
-                    <div className="Auth_content">
-                        <div className="Auth_content_img_reg"></div>
+        <div className="user-register-container">
+            <div className="register-image-side">
+                <h1>Join Plusecore</h1>
+                <p>Connect with skilled professionals and share your expertise in our growing community of learners and teachers.</p>
+            </div>
+            <div className="register-form-side">
+                <div className="register-form-container">
+                    <div className="register-header">
+                        <h2>Create your account!</h2>
+                        <p>Join our community and start sharing your skills today.</p>
                     </div>
-                    <div className="Auth_content_reg new_content">
-                        <div className="Auth_logo"></div>
-                        <div className='login_content'>
-                            <p className="Auth_heading">Create your account!</p>
-                        </div>
-                        <form onSubmit={handleSubmit} className="Auth_form">
-                            <div className="Auth_formGroup">
-                                <label className="Auth_label">Full Name</label>
+                    <form className="register-form" onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Full Name</label>
+                            <div className="input-field">
+                                <FaUser className="input-icon" />
                                 <input
-                                    className="Auth_input"
                                     type="text"
                                     name="fullname"
                                     placeholder="Full Name"
@@ -88,10 +77,12 @@ function UserRegister() {
                                     required
                                 />
                             </div>
-                            <div className="Auth_formGroup">
-                                <label className="Auth_label">Email Address</label>
+                        </div>
+                        <div className="form-group">
+                            <label>Email Address</label>
+                            <div className="input-field">
+                                <FaEnvelope className="input-icon" />
                                 <input
-                                    className="Auth_input"
                                     type="email"
                                     name="email"
                                     placeholder="Email"
@@ -100,10 +91,12 @@ function UserRegister() {
                                     required
                                 />
                             </div>
-                            <div className="Auth_formGroup">
-                                <label className="Auth_label">Password</label>
+                        </div>
+                        <div className="form-group">
+                            <label>Password</label>
+                            <div className="input-field">
+                                <FaLock className="input-icon" />
                                 <input
-                                    className="Auth_input"
                                     type="password"
                                     name="password"
                                     placeholder="Password"
@@ -112,10 +105,12 @@ function UserRegister() {
                                     required
                                 />
                             </div>
-                            <div className="Auth_formGroup">
-                                <label className="Auth_label">Phone</label>
+                        </div>
+                        <div className="form-group">
+                            <label>Phone</label>
+                            <div className="input-field">
+                                <FaPhone className="input-icon" />
                                 <input
-                                    className="Auth_input"
                                     type="text"
                                     name="phone"
                                     placeholder="Phone"
@@ -132,32 +127,23 @@ function UserRegister() {
                                     required
                                 />
                             </div>
-                            <div className="Auth_formGroup">
-                                <label className="Auth_label">Skills</label>
-                                <div className='skil_dis_con'>
-                                    {formData.skills.map((skill, index) => (
-                                        <p className='skil_name' key={index}>{skill}</p>
-                                    ))}
-                                </div>
-                                <div className='skil_addbtn'>
-                                    <input
-                                        className="Auth_input"
-                                        type="text"
-                                        placeholder="Add Skill"
-                                        value={skillInput}
-                                        onChange={(e) => setSkillInput(e.target.value)}
-                                    />
-                                    <IoMdAdd onClick={handleAddSkill} className="add_s_btn" />
+                        </div>
+                        <button type="submit" className="submit-btn">Register</button>
+                        <div className="login-link">
+                            You have an account? <span onClick={() => (window.location.href = '/')}>Sign in now</span>
+                        </div>
+                        <div style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.9rem' }}>
+                            — OR —
+                        </div>
 
-                                </div>
-                            </div>
-
-                            <button type="submit" className="Auth_button">Register</button>
-                            <p className="Auth_signupPrompt">
-                                You have an account? <span onClick={() => (window.location.href = '/')} className="Auth_signupLink">Sign now</span>
-                            </p>
-                        </form>
-                    </div>
+                    </form>
+                    <button
+                        onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+                        className="Auth_googleButton"
+                    >
+                        <img src={GoogalLogo} alt='Google logo' className='glogo' />
+                        Sign in with Google
+                    </button>
                 </div>
             </div>
         </div>

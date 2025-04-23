@@ -5,34 +5,31 @@ import { IoSend } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { BiSolidLike } from "react-icons/bi";
-import SideBar from '../../Components/SideBar/SideBar';
-import Modal from 'react-modal'; // Import Modal library
+import Modal from 'react-modal'; 
 
-Modal.setAppElement('#root'); // Bind modal to the root element
+Modal.setAppElement('#root'); 
 
 function AllPost() {
   const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]); // For filtering posts
-  const [postOwners, setPostOwners] = useState({}); // Map of userID to fullName
-  const [showMyPosts, setShowMyPosts] = useState(false); // Toggle for "My Posts"
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [postOwners, setPostOwners] = useState({}); 
+  const [showMyPosts, setShowMyPosts] = useState(false); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
-  const [followedUsers, setFollowedUsers] = useState([]); // State to track followed users
-  const [newComment, setNewComment] = useState({}); // State for new comments
-  const [editingComment, setEditingComment] = useState({}); // State for editing comments
+  const [followedUsers, setFollowedUsers] = useState([]); 
+  const [newComment, setNewComment] = useState({}); 
+  const [editingComment, setEditingComment] = useState({});
   const navigate = useNavigate();
-  const loggedInUserID = localStorage.getItem('userID'); // Get the logged-in user's ID
+  const loggedInUserID = localStorage.getItem('userID');
 
   useEffect(() => {
-    // Fetch all posts from the backend
     const fetchPosts = async () => {
       try {
         const response = await axios.get('http://localhost:8080/posts');
         setPosts(response.data);
-        setFilteredPosts(response.data); // Initially show all posts
+        setFilteredPosts(response.data); 
 
-        // Fetch post owners' names
-        const userIDs = [...new Set(response.data.map((post) => post.userID))]; // Get unique userIDs
+        const userIDs = [...new Set(response.data.map((post) => post.userID))]; 
         const ownerPromises = userIDs.map((userID) =>
           axios.get(`http://localhost:8080/user/${userID}`)
             .then((res) => ({
@@ -49,10 +46,10 @@ function AllPost() {
           acc[owner.userID] = owner.fullName;
           return acc;
         }, {});
-        console.log('Post Owners Map:', ownerMap); // Debug log to verify postOwners map
+        console.log('Post Owners Map:', ownerMap); 
         setPostOwners(ownerMap);
       } catch (error) {
-        console.error('Error fetching posts:', error); // Log error for fetching posts
+        console.error('Error fetching posts:', error); 
       }
     };
 
@@ -78,14 +75,14 @@ function AllPost() {
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this post?');
     if (!confirmDelete) {
-      return; // Exit if the user cancels the confirmation
+      return; 
     }
 
     try {
       await axios.delete(`http://localhost:8080/posts/${postId}`);
       alert('Post deleted successfully!');
-      setPosts(posts.filter((post) => post.id !== postId)); // Remove the deleted post from the UI
-      setFilteredPosts(filteredPosts.filter((post) => post.id !== postId)); // Update filtered posts
+      setPosts(posts.filter((post) => post.id !== postId)); 
+      setFilteredPosts(filteredPosts.filter((post) => post.id !== postId)); 
     } catch (error) {
       console.error('Error deleting post:', error);
       alert('Failed to delete post.');
@@ -93,18 +90,16 @@ function AllPost() {
   };
 
   const handleUpdate = (postId) => {
-    navigate(`/updatePost/${postId}`); // Navigate to the UpdatePost page with the post ID
+    navigate(`/updatePost/${postId}`); 
   };
 
   const handleMyPostsToggle = () => {
     if (showMyPosts) {
-      // Show all posts
       setFilteredPosts(posts);
     } else {
-      // Filter posts by logged-in user ID
       setFilteredPosts(posts.filter((post) => post.userID === loggedInUserID));
     }
-    setShowMyPosts(!showMyPosts); // Toggle the state
+    setShowMyPosts(!showMyPosts);
   };
 
   const handleLike = async (postId) => {
@@ -118,7 +113,6 @@ function AllPost() {
         params: { userID },
       });
 
-      // Update the specific post's likes in the state
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId ? { ...post, likes: response.data.likes } : post
@@ -143,11 +137,9 @@ function AllPost() {
     }
     try {
       if (followedUsers.includes(postOwnerID)) {
-        // Unfollow logic
         await axios.put(`http://localhost:8080/user/${userID}/unfollow`, { unfollowUserID: postOwnerID });
         setFollowedUsers(followedUsers.filter((id) => id !== postOwnerID));
       } else {
-        // Follow logic
         await axios.put(`http://localhost:8080/user/${userID}/follow`, { followUserID: postOwnerID });
         setFollowedUsers([...followedUsers, postOwnerID]);
       }
@@ -162,7 +154,7 @@ function AllPost() {
       alert('Please log in to comment.');
       return;
     }
-    const content = newComment[postId] || ''; // Get the comment content for the specific post
+    const content = newComment[postId] || ''; 
     if (!content.trim()) {
       alert('Comment cannot be empty.');
       return;
@@ -173,7 +165,6 @@ function AllPost() {
         content,
       });
 
-      // Update the specific post's comments in the state
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId ? { ...post, comments: response.data.comments } : post
@@ -199,7 +190,6 @@ function AllPost() {
         params: { userID },
       });
 
-      // Update state to remove the deleted comment
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
@@ -228,7 +218,6 @@ function AllPost() {
         content,
       });
 
-      // Update the comment in state
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
@@ -255,7 +244,7 @@ function AllPost() {
         )
       );
 
-      setEditingComment({}); // Clear editing state
+      setEditingComment({}); 
     } catch (error) {
       console.error('Error saving comment:', error);
     }
@@ -274,7 +263,6 @@ function AllPost() {
   return (
     <div>
       <div className='continer'>
-        <div><SideBar /></div>
         <div className='continSection'>
           <button
             className='actionButton_add'

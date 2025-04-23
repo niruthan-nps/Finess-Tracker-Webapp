@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { IoMdAdd } from "react-icons/io";
-import SideBar from '../../Components/SideBar/SideBar';
 function AddLearningProgress() {
   const [formData, setFormData] = useState({
     skillTitle: '',
@@ -56,7 +53,6 @@ function AddLearningProgress() {
   return (
     <div>
       <div className='continer'>
-        <div> <SideBar /></div>
         <div className='continSection'>
           <div className="from_continer">
             <p className="Auth_heading">Add Learning Progress</p>

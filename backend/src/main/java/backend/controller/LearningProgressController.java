@@ -35,14 +35,13 @@ public class LearningProgressController {
     LearningProgressModel update(@RequestBody LearningProgressModel newLearningProgressModel, @PathVariable String id) {
         return learningProgressRepository.findById(id)
                 .map(learningProgressModel -> {
-                    learningProgressModel.setSkillTitle(newLearningProgressModel.getSkillTitle());
-                    learningProgressModel.setDescription(newLearningProgressModel.getDescription());
                     learningProgressModel.setPostOwnerID(newLearningProgressModel.getPostOwnerID());
                     learningProgressModel.setPostOwnerName(newLearningProgressModel.getPostOwnerName());
-                    learningProgressModel.setField(newLearningProgressModel.getField());
+                    learningProgressModel.setTitle(newLearningProgressModel.getTitle());
                     learningProgressModel.setStartDate(newLearningProgressModel.getStartDate());
                     learningProgressModel.setEndDate(newLearningProgressModel.getEndDate());
-                    learningProgressModel.setLevel(newLearningProgressModel.getLevel());
+                    learningProgressModel.setDescription(newLearningProgressModel.getDescription());
+                    learningProgressModel.setFeedBack(newLearningProgressModel.getFeedBack());
                     return learningProgressRepository.save(learningProgressModel);
                 }).orElseThrow(() -> new LearningProgressNotFoundException(id));
     }

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IoMdAdd } from "react-icons/io";
 import './post.css'
-import SideBar from '../../Components/SideBar/SideBar';
 function AddLeariningPost() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -52,9 +51,6 @@ function AddLeariningPost() {
   return (
     <div>
       <div className='continer'>
-        <div>
-          <SideBar />
-        </div>
         <div className='continSection'>
           <div className="from_continer">
             <p className="Auth_heading">Add Learning Post</p>

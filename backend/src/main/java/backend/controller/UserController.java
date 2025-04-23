@@ -32,9 +32,6 @@ public class UserController {
         if (userRepository.existsByEmail(newUserModel.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Email already exists!"));
         }
-        if (newUserModel.getSkills() == null) {
-            newUserModel.setSkills(List.of());
-        }
         UserModel savedUser = userRepository.save(newUserModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
