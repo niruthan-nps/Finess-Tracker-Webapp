@@ -17,7 +17,7 @@ public class PostManagementModel {
     private String description;
     private List<String> media;
     private Map<String, Boolean> likes = new HashMap<>(); 
-    private List<Comment> comments = new ArrayList<>(); 
+    //private List<Comment> comments = new ArrayList<>(); 
 
     public PostManagementModel(String id, String userID, String title, String description, List<String> media) {
         this.id = id;
@@ -79,11 +79,11 @@ public class PostManagementModel {
         this.likes = likes;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
+    // public List<Comment> getComments() {
+    //     return comments;
+    // }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+    // public void setComments(List<Comment> comments) {
+    //     this.comments = comments;
+    // }
 }
