@@ -85,7 +85,7 @@ function MyLearningProgress() {
                   </div>
                 </div>
 
-                {/* <div className="card-actions">
+                <div className="card-actions">
                   <button
                     className="edit-btn"
                     onClick={() => navigate(`/updateLearningProgress/${progress.id}`)}
@@ -98,7 +98,7 @@ function MyLearningProgress() {
                   >
                     <FaTrash /> Delete
                   </button>
-                </div> */}
+                </div>
               </div>
             ))
           )}
