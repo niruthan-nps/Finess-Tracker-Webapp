@@ -22,7 +22,7 @@
 
 .logo {
   display: flex;
-  /* align-items: center; */
+  align-items: center;
   gap: 0.8rem;
   cursor: pointer;
 }
