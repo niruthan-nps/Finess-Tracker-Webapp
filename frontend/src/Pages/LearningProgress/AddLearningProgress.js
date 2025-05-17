@@ -73,18 +73,7 @@ function AddLearningProgress() {
             />
           </div>
 
-          <div className="pro-date-inputs">
-            <div className="pro-form-group">
-              <label>Start Date</label>
-              <input
-                className="pro-form-input"
-                name="startDate"
-                type="date"
-                value={formData.startDate}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          
 
             <div className="pro-form-group">
               <label>End Date</label>
