@@ -26,10 +26,7 @@ function MyLearningProgress() {
       fetch(`http://localhost:8080/learningProgress/${id}`, {
         method: 'DELETE',
       })
-        .then(() => {
-          const updatedData = filteredData.filter(progress => progress.id !== id);
-          setFilteredData(updatedData);
-          alert("Learning progress deleted successfully.");
+        . 
         })
         .catch((error) => console.error('Error deleting learning progress:', error));
     }
